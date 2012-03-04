@@ -11,25 +11,26 @@ Usage:
     from twisted.internet import reactor
     from twisted.web.server import Site
     from txsimpleroutes import RoutableResource
-    
+
     # Create a Controller
     class Controller(RoutableResource):
-        
+    
         @route('/')
-        def index(self, request):
+        def index(self, request, **kwargs):
             return '<html><body>Hello World!</body></html>'
 
-        @route('/docs/{item}')
-        def docs(self, request, item):
+        @route('/docs/{item}', conditions=dict(method=['GET']))
+        def docs(self, request, item, **kwargs):
             return '<html><body>Docs for %s</body></html>' % item.encode('utf8')
 
-        @route('/docs/{item}')
-        def post_data(self, request):
+        @route('/docs/{item}', conditions=dict(method=['POST']))
+        def post_data(self, request, **kwargs):
             return '<html><body>OK</body></html>'
 
     factory = Site(Controller())
     reactor.listenTCP(8000, factory)
     reactor.run()
+
 
 Helpful background information:
 - Python routes: http://routes.groovie.org/

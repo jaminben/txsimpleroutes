@@ -23,15 +23,15 @@ class RoutableResource(Resource):
         class Controller(RoutableResource):
             
             @route('/')
-            def index(self, request):
+            def index(self, request, **kwargs):
                 return '<html><body>Hello World!</body></html>'
 
-            @route('/docs/{item}')
-            def docs(self, request, item):
+            @route('/docs/{item}', conditions=dict(method=['GET']))
+            def docs(self, request, item, **kwargs):
                 return '<html><body>Docs for %s</body></html>' % item.encode('utf8')
 
-            @route('/docs/{item}')
-            def post_data(self, request):
+            @route('/docs/{item}', conditions=dict(method=['POST']))
+            def post_data(self, request, **kwargs):
                 return '<html><body>OK</body></html>'
 
         factory = Site(Controller())
