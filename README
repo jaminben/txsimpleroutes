@@ -1,0 +1,38 @@
+Provides routes-like dispatching for twisted.web.server.
+
+Frequently, it's much easier to describe your website layout using routes
+instead of Resource from twisted.web.resource. This small library lets you
+dispatch with routes in your twisted.web application. This library was heavily 
+inspired by txroutes but introduces a major API change or I would have contributed
+to that project.
+
+Usage:
+
+    from twisted.internet import reactor
+    from twisted.web.server import Site
+    from txsimpleroutes import RoutableResource
+    
+    # Create a Controller
+    class Controller(RoutableResource):
+        
+        @route('/')
+        def index(self, request):
+            return '<html><body>Hello World!</body></html>'
+
+        @route('/docs/{item}')
+        def docs(self, request, item):
+            return '<html><body>Docs for %s</body></html>' % item.encode('utf8')
+
+        @route('/docs/{item}')
+        def post_data(self, request):
+            return '<html><body>OK</body></html>'
+
+    factory = Site(Controller())
+    reactor.listenTCP(8000, factory)
+    reactor.run()
+
+Helpful background information:
+- Python routes: http://routes.groovie.org/
+- Using twisted.web.resources: http://twistedmatrix.com/documents/current/web/howto/web-in-60/dynamic-dispatch.html
+
+Adopted from txroutes and corepost
